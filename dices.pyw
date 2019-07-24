@@ -1,23 +1,20 @@
 #TODO:
 #-disable roll button when there is no dice selected
 #-disable custom dice type value entry widget when custom dice radiobutton is not selected
+#-indication is needed that new number was rolled (maybe randomly changing numbers for x seconds?)
 
 
 
 from tkinter import *
 from tkinter import ttk
+from random import *
 
 v = 0
 
 def roll():
-    add()
-    pass
-
-def add():
     global v
-    v = v + 1
+    v = randint(1, 4)
     result.configure(text = v)
-
 
 # Create main window
 windowMain = Tk()
@@ -33,13 +30,13 @@ frameRolling.pack(side = LEFT, fill = BOTH)
 
 #Dice type selection radiobuttons
 diceType = StringVar()
-radiobuttonDiceTypeK3 = ttk.Radiobutton(frameDiceSelection, text = 'K3', variable = diceType, value = 'K3')
+radiobuttonDiceTypeK4 = ttk.Radiobutton(frameDiceSelection, text = 'K4', variable = diceType, value = 'K4')
 radiobuttonDiceTypeK6 = ttk.Radiobutton(frameDiceSelection, text = 'K6', variable = diceType, value = 'K6')
 radiobuttonDiceTypeK10 = ttk.Radiobutton(frameDiceSelection, text = 'K10', variable = diceType, value = 'K10')
 radiobuttonDiceTypeK12 = ttk.Radiobutton(frameDiceSelection, text = 'K12', variable = diceType, value = 'K12')
 radiobuttonDiceTypeK20 = ttk.Radiobutton(frameDiceSelection, text = 'K20', variable = diceType, value = 'K20')
 radiobuttonDiceTypeK100 = ttk.Radiobutton(frameDiceSelection, text = 'K100', variable = diceType, value = 'K100')
-radiobuttonDiceTypeK3.grid(sticky = W, row = 0, column = 0)
+radiobuttonDiceTypeK4.grid(sticky = W, row = 0, column = 0)
 radiobuttonDiceTypeK6.grid(sticky = W, row = 1, column = 0)
 radiobuttonDiceTypeK10.grid(sticky = W, row = 2, column = 0)
 radiobuttonDiceTypeK12.grid(sticky = W, row = 3, column = 0)
