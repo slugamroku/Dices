@@ -29,7 +29,10 @@ def startThreadRoll():#start separate thread for rolling (prevents GUI freezing 
 
 def roll():
     for i in range (1,100): #Roll animation
-        actDiceValue = randint(1, diceTypeSelected.get())
+        if diceTypeSelected.get() != 0:
+            actDiceValue = randint(1, diceTypeSelected.get())
+        else:
+            actDiceValue = randint(1, diceTypeCustomValue.get())
         result.configure(text = actDiceValue)
         sleep(0.01)
 
@@ -60,7 +63,7 @@ for i, (diceTypeName, diceTypeValue) in enumerate(diceTypeList):
     ttk.Radiobutton(frameDiceSelection, text = diceTypeName, variable = diceTypeSelected, value = diceTypeValue).grid(sticky = W, row = i, column = 0)
 
 #Input for custom dice
-diceTypeCustomValue = StringVar();
+diceTypeCustomValue = IntVar();
 entryDiceTypeCustomValue = ttk.Entry(frameDiceSelection, textvariable = diceTypeCustomValue)
 entryDiceTypeCustomValue.grid(sticky = W, row = len(diceTypeList)-1, column = 1)
 
