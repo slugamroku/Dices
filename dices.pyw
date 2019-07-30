@@ -1,26 +1,48 @@
 #TODO:
 #-disable roll button when there is no dice selected
 #-disable custom dice type value entry widget when custom dice radiobutton is not selected
-#-indication is needed that new number was rolled (maybe randomly changing numbers for x seconds?)
 #-if custom is selected and there is no custom value catch error (also number can not be negative or zero or string) -> make input box red and lock roll button
-
+#-add locking radiobutton change during rolling
 
 from tkinter import *
 from tkinter import ttk
 from random import *
+from time import *
+import threading
 
 v = 0
 
+diceTypeList = [
+    ('K4', 4),
+    ('K6', 6),
+    ('K10', 10),
+    ('K12', 12),
+    ('K20', 20),
+    ('K100', 100),
+    ('K', 0)
+    ]
 
+#Determine roll result
+def startThreadRoll():#start separate thread for rolling (prevents GUI freezing during roll)
+   threadRoll = threading.Thread(target = roll)
+   threadRoll.start()
 
 def roll():
-    global v
-    v = randint(1, diceType.get())
-    result.configure(text = v)
+    for i in range (1,100): #Roll animation
+        actDiceValue = randint(1, diceTypeSelected.get())
+        result.configure(text = actDiceValue)
+        sleep(0.01)
 
 # Create main window
 windowMain = Tk()
 windowMain.title('Dices')
+
+##### STYLES #####
+
+styleDefault = ttk.Style()
+styleDefault.configure('result.TLabel', font = ('Arial', 100))
+
+##########
 
 #Frame for dice selection on the left side of the window
 frameDiceSelection = ttk.Frame(windowMain, padding = 10, borderwidth = 2, relief = 'sunken')
@@ -31,44 +53,28 @@ frameRolling = ttk.Frame(windowMain, padding = 10, borderwidth = 2, relief = 'su
 frameRolling.pack(side = LEFT, fill = BOTH)
 
 #Dice type selection radiobuttons
-diceType = IntVar()
-diceType.set(4)
-radiobuttonDiceTypeK4 = ttk.Radiobutton(frameDiceSelection, text = 'K4', variable = diceType, value = 4)
-radiobuttonDiceTypeK6 = ttk.Radiobutton(frameDiceSelection, text = 'K6', variable = diceType, value = 6)
-radiobuttonDiceTypeK10 = ttk.Radiobutton(frameDiceSelection, text = 'K10', variable = diceType, value = 10)
-radiobuttonDiceTypeK12 = ttk.Radiobutton(frameDiceSelection, text = 'K12', variable = diceType, value = 12)
-radiobuttonDiceTypeK20 = ttk.Radiobutton(frameDiceSelection, text = 'K20', variable = diceType, value = 20)
-radiobuttonDiceTypeK100 = ttk.Radiobutton(frameDiceSelection, text = 'K100', variable = diceType, value = 100)
-radiobuttonDiceTypeK4.grid(sticky = W, row = 0, column = 0)
-radiobuttonDiceTypeK6.grid(sticky = W, row = 1, column = 0)
-radiobuttonDiceTypeK10.grid(sticky = W, row = 2, column = 0)
-radiobuttonDiceTypeK12.grid(sticky = W, row = 3, column = 0)
-radiobuttonDiceTypeK20.grid(sticky = W, row = 4, column = 0)
-radiobuttonDiceTypeK100.grid(sticky = W, row = 5, column = 0)
-
-radiobuttonDiceTypeOther = ttk.Radiobutton(frameDiceSelection, text = 'K', variable = diceType, value = 0)
-radiobuttonDiceTypeOther.grid(sticky = W, row = 6, column = 0)
+diceTypeSelected = IntVar()
+diceTypeSelected.set(4)
+for i, (diceTypeName, diceTypeValue) in enumerate(diceTypeList):
+    ttk.Radiobutton(frameDiceSelection, text = diceTypeName, variable = diceTypeSelected, value = diceTypeValue).grid(sticky = W, row = i, column = 0)
 
 #Input for custom dice
 diceTypeCustomValue = StringVar();
 entryDiceTypeCustomValue = ttk.Entry(frameDiceSelection, textvariable = diceTypeCustomValue)
-entryDiceTypeCustomValue.grid(sticky = W, row = 6, column = 1)
+entryDiceTypeCustomValue.grid(sticky = W, row = len(diceTypeList)-1, column = 1)
 
-result = ttk.Label(frameRolling, text = v)
+#show roll result
+result = ttk.Label(frameRolling, text = 0, style = 'result.TLabel')
 result.pack()
 
 #Button for rolling the dice
-buttonRoll = ttk.Button(frameRolling, text = 'Roll', command = roll)
+buttonRoll = ttk.Button(frameRolling, text = 'Roll the dice!', command = startThreadRoll)
 buttonRoll.pack()
-
-
-#radiobuttonDiceTypeK3.instate(['alternate'])
-
 
 #if no dice is selected disable Roll button
 if v>5:
     buttonRoll.state(['disabled'])
 else:
-    buttonRoll.state(['!disabled'])
+    buttonRoll.state(['!disabled']) 
 
 windowMain.mainloop()
