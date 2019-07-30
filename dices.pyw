@@ -35,6 +35,7 @@ def roll():
 
 # Create main window
 windowMain = Tk()
+windowMain.minsize(500,200)
 windowMain.title('Dices')
 
 ##### STYLES #####
@@ -50,7 +51,7 @@ frameDiceSelection.pack(side = LEFT, fill = BOTH)
 
 #Frame for rolling table on the right side of the window
 frameRolling = ttk.Frame(windowMain, padding = 10, borderwidth = 2, relief = 'sunken')
-frameRolling.pack(side = LEFT, fill = BOTH)
+frameRolling.pack(side = LEFT, fill = BOTH, expand = 1)
 
 #Dice type selection radiobuttons
 diceTypeSelected = IntVar()
